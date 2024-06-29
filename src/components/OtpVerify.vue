@@ -11,6 +11,7 @@ const emits = defineEmits(['update:showError', 'update:isVeirfy', 'update:isLoad
 
 watch(inputs.value, (newInputs) => {
   if (newInputs.every(input => input.trim().length === 1)) {
+    emits('update:showError', false)
     onSubmitHandler()
   }
 })
@@ -25,7 +26,6 @@ interface Item {
   token: string
 }
 const data = ref<Item[]>([])
-// const loading = ref(true)
 const error = ref<string | null>(null)
 
 const getVerify = async (code) => {
