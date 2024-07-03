@@ -62,15 +62,25 @@ const focusDirective: Directive ={
       event.preventDefault()
       const clipboardData = event.clipboardData
       if (clipboardData) {
-        console.log(clipboardData.getData('text'))
         const pastedText = clipboardData.getData('text')
+        const filteredText = pastedText.replace(/[^\d]/g, '')
         const inputs = el.parentElement?.querySelectorAll('input')
         if (inputs) {
           for (let i = 0; i < 4; i++) {
             if (inputs[i] instanceof HTMLInputElement) {
-              inputs[i].value = pastedText[i]
+              inputs[i].value = filteredText[i] || ''
+              inputs[i].dispatchEvent(new Event('input', { bubbles: true }))
             }
           }
+        }
+        let lastInput
+        if (filteredText.length > 4) {
+          lastInput = inputs[3]
+        } else {
+          lastInput = inputs[filteredText.length - 1]
+        }
+        if (lastInput instanceof HTMLInputElement) {
+          lastInput.focus();
         }
       }
     })
